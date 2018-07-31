@@ -49,6 +49,7 @@
 }
 -(void)buildRequest{
     NSMutableURLRequest *mutablerequest=[[NSMutableURLRequest alloc]initWithURL:[NSURL URLWithString:_Url]];
+    mutablerequest.HTTPShouldHandleCookies=NO;
     mutablerequest.timeoutInterval=self.TimeOut>0?self.TimeOut:50;
     switch (_mothed) {
         case VisitModePOST:
