@@ -42,7 +42,7 @@
                 if(uploadedHandler){
                     uploadedHandler(data,response,error);
                 }
-                uploadings(100,1);
+                self->uploadings(100,1);
                 [super CurrentApplication].networkActivityIndicatorVisible=NO;
             });
         }];
@@ -57,9 +57,9 @@
         [format setNumberStyle:NSNumberFormatterDecimalStyle];
         [format setRoundingMode:NSNumberFormatterRoundHalfUp];
         [format setMaximumFractionDigits:0];
-        percent=progress*100;
+        self->percent=progress*100;
         dispatch_async(dispatch_get_main_queue(), ^{
-            uploadings(percent-1,progress-0.01);
+            self->uploadings(self->percent-1,progress-0.01);
         });
     });
 }

@@ -66,7 +66,11 @@
     if([self.parm count]>0&&_mothed==VisitModePOST){
         mutablerequest.HTTPBody=[[self buildParams] ToData];
     }else if([self.parm count]>0&&_mothed==VisitModeGET){
-        mutablerequest.URL=[NSURL URLWithString:[NSString stringWithFormat:@"%@?%@",_Url,[self buildParams]]];
+        if([_Url rangeOfString:@"?"].location!=NSNotFound){
+            mutablerequest.URL=[NSURL URLWithString:[NSString stringWithFormat:@"%@?%@",_Url,[self buildParams]]];
+        }else{
+            mutablerequest.URL=[NSURL URLWithString:[NSString stringWithFormat:@"%@&%@",_Url,[self buildParams]]];
+        }
     }
     request=[mutablerequest copy];
 }
@@ -91,8 +95,8 @@
                 }else{
                     handler([data ToUtf8String]);
                 }
+                self->_CurrentApplication.networkActivityIndicatorVisible=NO;
             });
-            _CurrentApplication.networkActivityIndicatorVisible=NO;
         }
     }];
     [task resume];
@@ -109,9 +113,9 @@
                 NSArray *resultArray=[NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
                 handler(resultArray);
             }
+            self->_CurrentApplication.networkActivityIndicatorVisible=NO;
         });
         
-        _CurrentApplication.networkActivityIndicatorVisible=NO;
     }];
     [task resume];
 }
@@ -131,9 +135,8 @@
                     handler([data ToUtf8String]);
                 }
             }
+            self->_CurrentApplication.networkActivityIndicatorVisible=NO;
         });
-        
-        _CurrentApplication.networkActivityIndicatorVisible=NO;
     }];
     [task resume];
 }
@@ -148,9 +151,8 @@
             }else{
                 handler(data,response);
             }
+            self->_CurrentApplication.networkActivityIndicatorVisible=NO;
         });
-        
-        _CurrentApplication.networkActivityIndicatorVisible=NO;
     }];
     [task resume];
 }
@@ -161,9 +163,9 @@
         [format setNumberStyle:NSNumberFormatterDecimalStyle];
         [format setRoundingMode:NSNumberFormatterRoundHalfUp];
         [format setMaximumFractionDigits:0];
-        percent=progress*100;
+        self->percent=progress*100;
         dispatch_async(dispatch_get_main_queue(), ^{
-            uploadings(percent-1,progress-0.01);
+            self->uploadings(self->percent-1,progress-0.01);
         });
     });
 }
@@ -179,12 +181,10 @@
                 if(uploadedHandler){
                     uploadedHandler(data,response,error);
                 }
-                uploadings(100,1);
+                self->uploadings(100,1);
             });
-            _CurrentApplication.networkActivityIndicatorVisible=NO;
+            self->_CurrentApplication.networkActivityIndicatorVisible=NO;
         });
-        
-        _CurrentApplication.networkActivityIndicatorVisible=NO;
     }];
     [task resume];
 }
