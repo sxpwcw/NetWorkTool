@@ -66,7 +66,7 @@
     if([self.parm count]>0&&_mothed==VisitModePOST){
         mutablerequest.HTTPBody=[[self buildParams] ToData];
     }else if([self.parm count]>0&&_mothed==VisitModeGET){
-        if([_Url rangeOfString:@"?"].location!=NSNotFound){
+        if([_Url rangeOfString:@"?"].length==0){
             mutablerequest.URL=[NSURL URLWithString:[NSString stringWithFormat:@"%@?%@",_Url,[self buildParams]]];
         }else{
             mutablerequest.URL=[NSURL URLWithString:[NSString stringWithFormat:@"%@&%@",_Url,[self buildParams]]];
